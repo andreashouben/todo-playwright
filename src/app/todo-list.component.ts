@@ -8,9 +8,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   template: ` <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <label>Enter a todo:<input type="text" formControlName="todo" /></label>
+      <label
+        >Enter a todo:<input type="text" formControlName="todo" />
+        <div *ngIf="todo?.invalid && (todo?.dirty || todo?.touched)">
+          <div *ngIf="todo?.errors?.['required']">Please enter a Todo.</div>
+        </div>
+      </label>
     </form>
-    {{ form.getRawValue() | json }}
     <ul>
       <li *ngFor="let todoItem of todos">
         {{ todoItem.text }}
@@ -23,6 +27,10 @@ export class TodoListComponent implements OnInit {
     todo: ['', Validators.required],
   });
 
+  get todo() {
+    return this.form.get('todo');
+  }
+
   todos: Todo[] = [];
   constructor(
     private todoService: TodoService,
@@ -34,9 +42,12 @@ export class TodoListComponent implements OnInit {
   }
 
   onSubmit() {
-    const text = this.form.get('todo')?.value!;
-    this.todoService.addTodo({ text });
-    this.form.reset();
-    this.todos = this.todoService.getTodos();
+    this.form.markAsTouched();
+    if (this.form.valid) {
+      const text = this.form.get('todo')?.value!;
+      this.todoService.addTodo({ text });
+      this.form.reset();
+      this.todos = this.todoService.getTodos();
+    }
   }
 }
