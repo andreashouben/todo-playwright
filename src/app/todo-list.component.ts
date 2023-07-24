@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TodoService } from './todo.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TodoItemComponent } from './todo-item.component';
 
 @Component({
   selector: 'todo-todo-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TodoItemComponent],
   template: ` <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <label
         >Enter a todo:<input type="text" formControlName="todo" />
@@ -17,7 +18,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
     </form>
     <ul>
       <li *ngFor="let todoItem of todos">
-        {{ todoItem.text }}
+        <todo-todo-item [todo]="todoItem" />
       </li>
     </ul>`,
   styles: [``],
