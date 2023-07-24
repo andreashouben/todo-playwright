@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -24,7 +24,7 @@ import { TodoService } from './todo.service';
   `,
   styles: [],
 })
-export class TodoFormComponent implements OnInit {
+export class TodoFormComponent {
   form = this.fb.group({
     todo: ['', Validators.required],
   });
@@ -32,23 +32,17 @@ export class TodoFormComponent implements OnInit {
   get todo() {
     return this.form.get('todo');
   }
-
-  todos: Todo[] = [];
   constructor(
     private todoService: TodoService,
     private fb: FormBuilder,
   ) {}
 
-  ngOnInit(): void {
-    this.todos = this.todoService.getTodos();
-  }
   onSubmit() {
     this.form.markAsTouched();
     if (this.form.valid) {
       const text = this.form.get('todo')?.value!;
       this.todoService.addTodo({ text });
       this.form.reset();
-      this.todos = this.todoService.getTodos();
     }
   }
 }

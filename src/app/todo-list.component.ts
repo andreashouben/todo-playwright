@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TodoService } from './todo.service';
-import { FormBuilder, Validators } from '@angular/forms';
 import { TodoItemComponent } from './todo-item.component';
 import { TodoFormComponent } from './todo-form.component';
+import { NEVER, Observable } from 'rxjs';
 
 @Component({
   selector: 'todo-todo-list',
@@ -11,24 +11,17 @@ import { TodoFormComponent } from './todo-form.component';
   imports: [CommonModule, TodoItemComponent, TodoFormComponent],
   template: ` <todo-todo-form></todo-todo-form>
     <ul>
-      <li *ngFor="let todoItem of todos">
+      <li *ngFor="let todoItem of todos | async">
         <todo-todo-item [todo]="todoItem" />
       </li>
     </ul>`,
   styles: [``],
 })
-export class TodoListComponent {
-  form = this.fb.group({
-    todo: ['', Validators.required],
-  });
+export class TodoListComponent implements OnInit {
+  todos: Observable<Todo[]> = NEVER;
+  constructor(private todoService: TodoService) {}
 
-  get todo() {
-    return this.form.get('todo');
+  ngOnInit(): void {
+    this.todos = this.todoService.todos$;
   }
-
-  todos: Todo[] = [];
-  constructor(
-    private todoService: TodoService,
-    private fb: FormBuilder,
-  ) {}
 }
