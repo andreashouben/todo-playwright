@@ -1,21 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TodoService } from './todo.service';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { TodoItemComponent } from './todo-item.component';
+import { TodoFormComponent } from './todo-form.component';
 
 @Component({
   selector: 'todo-todo-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TodoItemComponent],
-  template: ` <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <label
-        >Enter a todo:<input type="text" formControlName="todo" />
-        <div *ngIf="todo?.invalid && (todo?.dirty || todo?.touched)">
-          <div *ngIf="todo?.errors?.['required']">Please enter a Todo.</div>
-        </div>
-      </label>
-    </form>
+  imports: [CommonModule, TodoItemComponent, TodoFormComponent],
+  template: ` <todo-todo-form></todo-todo-form>
     <ul>
       <li *ngFor="let todoItem of todos">
         <todo-todo-item [todo]="todoItem" />
@@ -23,7 +17,7 @@ import { TodoItemComponent } from './todo-item.component';
     </ul>`,
   styles: [``],
 })
-export class TodoListComponent implements OnInit {
+export class TodoListComponent {
   form = this.fb.group({
     todo: ['', Validators.required],
   });
@@ -37,18 +31,4 @@ export class TodoListComponent implements OnInit {
     private todoService: TodoService,
     private fb: FormBuilder,
   ) {}
-
-  ngOnInit(): void {
-    this.todos = this.todoService.getTodos();
-  }
-
-  onSubmit() {
-    this.form.markAsTouched();
-    if (this.form.valid) {
-      const text = this.form.get('todo')?.value!;
-      this.todoService.addTodo({ text });
-      this.form.reset();
-      this.todos = this.todoService.getTodos();
-    }
-  }
 }
