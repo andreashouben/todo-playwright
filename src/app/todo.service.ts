@@ -29,20 +29,12 @@ export class TodoService {
     this._todos$.next(this.todos);
   }
 
-  markAsDone(id: number) {
+  toggle(id: number) {
     this.todos = this.todos.map((todo) =>
-      todo.id === id ? { ...todo, done: true } : todo,
+      todo.id === id ? { ...todo, done: !todo.done } : todo,
     );
     this._todos$.next(this.todos);
   }
-
-  markAsUndone(id: number) {
-    this.todos = this.todos.map((todo) =>
-      todo.id === id ? { ...todo, done: false } : todo,
-    );
-    this._todos$.next(this.todos);
-  }
-
   archiveTodo(id: number) {
     const [archive, todos] = partition((todo) => todo.id === id, this.todos);
     this.todos = todos;

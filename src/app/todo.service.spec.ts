@@ -41,7 +41,7 @@ describe('TodoService', () => {
       };
       const [addedTodo] = await firstValueFrom(service.todos$);
 
-      service.markAsDone(addedTodo.id);
+      service.toggle(addedTodo.id);
       const [doneTodo] = await firstValueFrom(service.todos$);
 
       expect(doneTodo).toEqual(expectedTodo);
@@ -54,9 +54,9 @@ describe('TodoService', () => {
         done: false,
       };
       const [addedTodo] = await firstValueFrom(service.todos$);
-      service.markAsDone(addedTodo.id);
+      service.toggle(addedTodo.id);
 
-      service.markAsUndone(addedTodo.id);
+      service.toggle(addedTodo.id);
       const [unDoneTodo] = await firstValueFrom(service.todos$);
 
       expect(unDoneTodo).toEqual(expectedTodo);
