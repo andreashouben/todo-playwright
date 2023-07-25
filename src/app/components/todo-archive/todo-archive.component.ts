@@ -14,7 +14,10 @@ import { TodoArchiveItemComponent } from '../todo-archive-item/todo-archive-item
         <h2>Todo Archive</h2>
         <ul>
           <li *ngFor="let todo of archive">
-            <todo-todo-archive-item [todo]="todo"></todo-todo-archive-item>
+            <todo-todo-archive-item
+              [todo]="todo"
+              (buttonClick)="unarchive($event)"
+            ></todo-todo-archive-item>
           </li>
         </ul>
       </ng-container>
@@ -28,5 +31,9 @@ export class TodoArchiveComponent implements OnInit {
 
   ngOnInit() {
     this.archive$ = this.todoService.archive$;
+  }
+
+  unarchive(id: number) {
+    this.todoService.unarchiveTodo(id);
   }
 }
