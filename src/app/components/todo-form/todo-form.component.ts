@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { TodoService } from './todo.service';
+import { TodoService } from '../../services/todo.service';
 
 @Component({
   selector: 'todo-todo-form',
@@ -16,7 +16,7 @@ import { TodoService } from './todo.service';
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <label
         >Enter a todo:<input type="text" formControlName="todo" />
-        <div *ngIf="todo?.invalid && (todo?.dirty || todo?.touched)">
+        <div *ngIf="todo?.invalid && todo?.dirty && todo?.touched">
           <div *ngIf="todo?.errors?.['required']">Please enter a Todo.</div>
         </div>
       </label>

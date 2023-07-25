@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TodoService } from './todo.service';
-import { TodoItemComponent } from './todo-item.component';
-import { TodoFormComponent } from './todo-form.component';
+import { TodoService } from '../../services/todo.service';
+import { TodoItemComponent } from '../todo-item/todo-item.component';
+import { TodoFormComponent } from '../todo-form/todo-form.component';
 import { NEVER, Observable } from 'rxjs';
 
 @Component({
