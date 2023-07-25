@@ -7,9 +7,10 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <label>
-      <input type="checkbox" (click)="onCheck($event)" [checked]="todo.done" />
+      <input type="checkbox" (click)="checked($event)" [checked]="todo.done" />
       {{ todo.text }}
     </label>
+    <button (click)="buttonClick.emit(todo.id)">Archive</button>
   `,
   styles: [``],
 })
@@ -18,10 +19,13 @@ export class TodoItemComponent {
   todo!: Todo;
 
   @Output()
-  onClick = new EventEmitter<number>();
+  check = new EventEmitter<number>();
 
-  onCheck($event: Event) {
+  @Output()
+  buttonClick = new EventEmitter<number>();
+
+  checked($event: Event) {
     $event.preventDefault();
-    this.onClick.emit(this.todo.id);
+    this.check.emit(this.todo.id);
   }
 }

@@ -12,7 +12,11 @@ import { NEVER, Observable } from 'rxjs';
   template: ` <todo-todo-form></todo-todo-form>
     <ul>
       <li *ngFor="let todoItem of todos | async">
-        <todo-todo-item [todo]="todoItem" (onClick)="toggle($event)" />
+        <todo-todo-item
+          [todo]="todoItem"
+          (check)="toggle($event)"
+          (buttonClick)="archive($event)"
+        />
       </li>
     </ul>`,
   styles: [``],
@@ -27,5 +31,9 @@ export class TodoListComponent implements OnInit {
 
   toggle(id: number) {
     this.todoService.toggle(id);
+  }
+
+  archive(id: number) {
+    this.todoService.archiveTodo(id);
   }
 }
