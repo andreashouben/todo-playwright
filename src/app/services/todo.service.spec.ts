@@ -63,13 +63,25 @@ describe('TodoService', () => {
     });
 
     it('can archive a todo', async () => {
-      const [addedTodo] = await firstValueFrom(service.todos$);
+      service.addTodo({ text: 'Feed Cat' });
+      const [todo1, todo2] = await firstValueFrom(service.todos$);
 
-      service.archiveTodo(addedTodo.id);
+      service.archiveTodo(todo1.id);
 
       const todos = await firstValueFrom(service.todos$);
 
-      expect(todos).toEqual([]);
+      expect(todos).toEqual([todo2]);
+    });
+
+    it('can archive two todos', async () => {
+      service.addTodo({ text: 'Feed Cat' });
+      const [todo1, todo2] = await firstValueFrom(service.todos$);
+
+      service.archiveTodo(todo1.id);
+      service.archiveTodo(todo2.id);
+
+      expect(await firstValueFrom(service.todos$)).toEqual([]);
+      expect(await firstValueFrom(service.archive$)).toEqual([todo1, todo2]);
     });
 
     describe('with an archived todo', () => {
@@ -98,6 +110,22 @@ describe('TodoService', () => {
 
         expect(await firstValueFrom(service.archive$)).toEqual([]);
         expect(await firstValueFrom(service.todos$)).toEqual([archivedTodo]);
+      });
+
+      it('unarchives two todos', async () => {
+        service.addTodo({ text: 'Feed Cat' });
+        const [todo2] = await firstValueFrom(service.todos$);
+        service.archiveTodo(todo2.id);
+        const [archived1, archived2] = await firstValueFrom(service.archive$);
+
+        service.unarchiveTodo(archived1.id);
+        service.unarchiveTodo(archived2.id);
+
+        expect(await firstValueFrom(service.archive$)).toEqual([]);
+        expect(await firstValueFrom(service.todos$)).toEqual([
+          archived1,
+          archived2,
+        ]);
       });
     });
   });

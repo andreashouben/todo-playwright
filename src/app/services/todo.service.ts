@@ -36,16 +36,20 @@ export class TodoService {
     this._todos$.next(this.todos);
   }
   archiveTodo(id: number) {
-    const [archive, todos] = partition((todo) => todo.id === id, this.todos);
+    const [[toArchive], todos] = partition(
+      (todo) => todo.id === id,
+      this.todos,
+    );
     this.todos = todos;
-    this.archive = archive;
+
+    this.archive = [...this.archive, toArchive];
     this._todos$.next(this.todos);
     this._archive$.next(this.archive);
   }
 
   unarchiveTodo(id: number) {
-    const [todos, archive] = partition((todo) => todo.id === id, this.archive);
-    this.todos = todos;
+    const [[todo], archive] = partition((todo) => todo.id === id, this.archive);
+    this.todos = [...this.todos, todo];
     this.archive = archive;
     this._todos$.next(this.todos);
     this._archive$.next(this.archive);

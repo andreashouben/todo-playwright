@@ -9,7 +9,8 @@ import { NEVER, Observable } from 'rxjs';
   selector: 'todo-todo-list',
   standalone: true,
   imports: [CommonModule, TodoItemComponent, TodoFormComponent],
-  template: ` <todo-todo-form></todo-todo-form>
+  template: ` <h2>Todo List</h2>
+    <todo-todo-form></todo-todo-form>
     <ul>
       <li *ngFor="let todoItem of todos | async">
         <todo-todo-item
