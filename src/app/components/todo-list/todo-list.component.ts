@@ -9,25 +9,33 @@ import { NEVER, Observable } from 'rxjs';
   selector: 'todo-todo-list',
   standalone: true,
   imports: [CommonModule, TodoItemComponent, TodoFormComponent],
-  template: ` <h2>Todo List</h2>
-    <todo-todo-form></todo-todo-form>
-    <ul>
-      <li *ngFor="let todoItem of todos | async">
-        <todo-todo-item
-          [todo]="todoItem"
-          (check)="toggle($event)"
-          (buttonClick)="archive($event)"
-        />
-      </li>
-    </ul>`,
+  template: `
+  <todo-todo-form></todo-todo-form>
+
+
+  <section *ngIf="(todos$| async)?.length" data-testid="todo-items">
+      <h2>Todos</h2>
+      <ul>
+          <li *ngFor="let todoItem of todos$ | async">
+              <todo-todo-item
+                      [todo]="todoItem"
+                      (check)="toggle($event)"
+                      (buttonClick)="archive($event)"
+              />
+          </li>
+      </ul>
+  </section>
+
+
+  `,
   styles: [``],
 })
 export class TodoListComponent implements OnInit {
-  todos: Observable<Todo[]> = NEVER;
+  todos$: Observable<Todo[]> = NEVER;
   constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
-    this.todos = this.todoService.todos$;
+    this.todos$ = this.todoService.todos$;
   }
 
   toggle(id: number) {

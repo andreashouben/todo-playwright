@@ -1,65 +1,81 @@
-import { test, expect } from '@playwright/test';
+import {expect, test} from '@playwright/test';
+import {TodoPage} from "./todoPage";
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test.describe('todo page', () => {
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
-});
+  let todoPage: TodoPage;
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+  test.beforeEach(async ({page}) => {
+    todoPage = new TodoPage(page);
+    await todoPage.goto()
+  })
 
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
+  test('can add a todo', async ({page}) => {
+    const todoText = 'Feed the cat';
 
-  // Expects the URL to contain intro.
-  await expect(page).toHaveURL(/.*intro/);
-});
-test('test', async ({ page }) => {
-  await page.goto('http://localhost:4200/');
-  await page.getByLabel('Enter a todo:').click();
-  await page.getByLabel('Enter a todo:').fill('Feed the cat');
-  await page.getByLabel('Enter a todo:').press('Enter');
-  await page.getByLabel('Enter a todo:').fill('Feed the dog');
-  await page.getByLabel('Enter a todo:').press('Enter');
-  await page.getByLabel('Enter a todo:').fill('Buy milk');
-  await page.getByLabel('Enter a todo:').press('Enter');
-  await page.getByLabel('Enter a todo:').fill('Clean the garage');
-  await page.getByLabel('Enter a todo:').press('Enter');
-  await page.getByLabel('Feed the cat').check();
-  await page.getByLabel('Feed the dog').check();
-  await page.getByLabel('Buy milk').check();
-  await page
-    .locator('todo-todo-item')
-    .filter({ hasText: 'Clean the garage Archive' })
-    .getByRole('button')
-    .click();
-  await page
-    .locator('todo-todo-item')
-    .filter({ hasText: 'Buy milk Archive' })
-    .getByRole('button')
-    .click();
-  await page
-    .locator('todo-todo-item')
-    .filter({ hasText: 'Feed the dog Archive' })
-    .getByRole('button')
-    .click();
-  await page.getByRole('button', { name: 'Archive', exact: true }).click();
-  await page
-    .locator('todo-todo-archive-item')
-    .filter({ hasText: 'Clean the garage Unarchive' })
-    .getByRole('button')
-    .click();
-  await page
-    .locator('todo-todo-archive-item')
-    .filter({ hasText: 'Buy milk Unarchive' })
-    .getByRole('button')
-    .click();
-  await page
-    .locator('todo-todo-archive-item')
-    .filter({ hasText: 'Feed the dog Unarchive' })
-    .getByRole('button')
-    .click();
-  await page.getByRole('button', { name: 'Unarchive' }).click();
-});
+    await todoPage.addTodo(todoText);
+
+    await expect(page.getByText(todoText)).toBeVisible()
+  })
+
+  test('can mark a todo as done', async ({page}) => {
+    const todoText = 'Feed the cat';
+    await todoPage.addTodo(todoText);
+
+    await page.getByLabel(todoText).click()
+
+    await expect(page.getByLabel(todoText)).toBeChecked()
+  })
+
+  test('can add multiple todos with the same text', async ({page}) => {
+    const todoText = 'Feed the cat';
+    await todoPage.addTodo(todoText);
+    await todoPage.addTodo(todoText);
+
+    await expect(page.getByText(todoText)).toHaveCount(2)
+  })
+
+  test('can archive a todo item', async ({page}) => {
+    const todoText = 'Feed the cat';
+    await todoPage.addTodo(todoText)
+
+    await todoPage.archiveTodo(todoText)
+
+    await expect(page.getByTestId('todo-archive').getByText(todoText)).toBeVisible()
+  })
+
+  test('keeps the done status for archived items', async ({page}) => {
+    const todoText = 'Feed the cat';
+    await todoPage.addTodo(todoText)
+    await page.getByLabel(todoText).click()
+
+    await todoPage.archiveTodo(todoText);
+
+    await expect(page.getByTestId('todo-archive').getByLabel(todoText)).toBeChecked()
+  })
+
+  test('disables the checkbox for archived items', async ({page}) => {
+    const todoText = 'Feed the cat';
+    await todoPage.addTodo(todoText)
+    await page.getByLabel(todoText).click()
+
+    await todoPage.archiveTodo(todoText);
+
+    await expect(page.getByTestId('todo-archive').getByLabel(todoText)).toBeDisabled()
+  })
+
+  test('re-enables the checkbox for unarchived items', async ({page}) =>{
+    const todoText = 'Feed the dog';
+    await todoPage.addTodo(todoText)
+    await todoPage.archiveTodo(todoText)
+
+    await todoPage.unarchiveTodo(todoText)
+
+    await expect(page.getByLabel(todoText)).toBeEnabled()
+  })
+
+
+
+})
+
+
