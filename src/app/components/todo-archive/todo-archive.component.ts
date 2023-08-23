@@ -11,7 +11,7 @@ import { TodoArchiveItemComponent } from '../todo-archive-item/todo-archive-item
   template: `
     <ng-container *ngIf="archive$ | async as archive">
       <ng-container *ngIf="archive.length > 0">
-        <section data-testid="todo-archive">
+        <section title="todo-archive">
         <h2>Todo Archive</h2>
         <ul>
           <li *ngFor="let todo of archive">

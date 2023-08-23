@@ -41,7 +41,7 @@ test.describe('todo page', () => {
 
     await todoPage.archiveTodo(todoText)
 
-    await expect(page.getByTestId('todo-archive').getByText(todoText)).toBeVisible()
+    await expect(page.getByTitle('todo-archive').getByText(todoText)).toBeVisible()
   })
 
   test('keeps the done status for archived items', async ({page}) => {
@@ -51,7 +51,7 @@ test.describe('todo page', () => {
 
     await todoPage.archiveTodo(todoText);
 
-    await expect(page.getByTestId('todo-archive').getByLabel(todoText)).toBeChecked()
+    await expect(page.getByTitle('todo-archive').getByLabel(todoText)).toBeChecked()
   })
 
   test('disables the checkbox for archived items', async ({page}) => {
@@ -61,7 +61,7 @@ test.describe('todo page', () => {
 
     await todoPage.archiveTodo(todoText);
 
-    await expect(page.getByTestId('todo-archive').getByLabel(todoText)).toBeDisabled()
+    await expect(page.getByTitle('todo-archive').getByLabel(todoText)).toBeDisabled()
   })
 
   test('re-enables the checkbox for unarchived items', async ({page}) =>{
