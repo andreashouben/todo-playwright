@@ -1,12 +1,12 @@
 import {expect, test} from '@playwright/test';
-import {TodoPage} from "./todoPage";
+import {TodoPageOld} from "./todoPageOld";
 
 test.describe('todo page', () => {
 
-  let todoPage: TodoPage;
+  let todoPage: TodoPageOld;
 
   test.beforeEach(async ({page}) => {
-    todoPage = new TodoPage(page);
+    todoPage = new TodoPageOld(page);
     await todoPage.goto()
   })
 

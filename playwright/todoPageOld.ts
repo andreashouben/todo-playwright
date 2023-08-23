@@ -1,6 +1,6 @@
 import {Page} from "@playwright/test";
 
-export class TodoPage{
+export class TodoPageOld {
 
   readonly todoInput;
   private readonly todoInputLabel = 'Enter a todo:';
