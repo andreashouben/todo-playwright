@@ -13,7 +13,7 @@ import { NEVER, Observable } from 'rxjs';
   <todo-todo-form></todo-todo-form>
 
 
-  <section *ngIf="(todos$| async)?.length" data-testid="todo-items">
+  <section *ngIf="(todos$| async)?.length" title="todo-items">
       <h2>Todos</h2>
       <ul>
           <li *ngFor="let todoItem of todos$ | async">
