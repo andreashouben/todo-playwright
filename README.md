@@ -1,6 +1,6 @@
 # TodoPlaywright
 
-This project demonstrates the usage of playwright
+This project demonstrates the usage of [Playwright](https://playwright.dev/)
 
 ## Init the project
 
